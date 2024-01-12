@@ -1,0 +1,15 @@
+apiVersion: record.crossplane.io/v1alpha1
+kind: Record
+metadata:
+  annotations:
+    meta.upbound.io/example-id: record/v1alpha1/record
+  labels:
+    testing.upbound.io/example-name: example
+  name: example
+spec:
+  forProvider:
+    name: terraform
+    ttl: 3600
+    type: A
+    value: 192.0.2.1
+    zoneId: ${var.cloudflare_zone_id}

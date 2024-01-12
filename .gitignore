@@ -1,0 +1,10 @@
+.direnv/
+.devenv/
+
+/.cache
+/.work
+/_output
+/vendor
+/.vendor-new
+
+cover.out
