@@ -8,6 +8,7 @@ name: release
 
 permissions:
   contents: read
+  id-token: write
 
 jobs:
   release:
@@ -19,17 +20,30 @@ jobs:
         with:
           token: ${{ secrets.BOT_ACCESS_TOKEN }}
 
-      - name: Semantic release
-        uses: cycjimmy/semantic-release-action@v3
+      - name: Setup nodejs
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+
+      - name: Install releaser
+        run: |
+          npm install -g \
+            conventional-changelog-conventionalcommits@6.1.0 \
+            semantic-release@23.1.1 \
+            @semantic-release/changelog \
+            @semantic-release/git \
+            @semantic-release/exec
+
+      - name: Run releaser
         env:
           GITHUB_TOKEN: ${{ secrets.BOT_ACCESS_TOKEN }}
-        with:
-          extra_plugins: |
-            @semantic-release/exec
-            conventional-changelog-conventionalcommits@6.1.0
+        run: semantic-release
 
       - name: Write buildtime
         run: date >| .github/RELEASE
+
+      - name: Update repo
+        run: git pull --rebase --autostash
 
       - name: Commit changes
         uses: EndBug/add-and-commit@v9
